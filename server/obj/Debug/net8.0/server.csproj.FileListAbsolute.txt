@@ -88,3 +88,4 @@ C:\react\QR_GEN-main\server\obj\Debug\net8.0\refint\server.dll
 C:\react\QR_GEN-main\server\obj\Debug\net8.0\server.pdb
 C:\react\QR_GEN-main\server\obj\Debug\net8.0\server.genruntimeconfig.cache
 C:\react\QR_GEN-main\server\obj\Debug\net8.0\ref\server.dll
+C:\react\QR_GEN-main\server\obj\Debug\net8.0\server.sourcelink.json
