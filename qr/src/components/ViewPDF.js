@@ -1,36 +1,48 @@
 import React, { useState, useEffect } from 'react';
-import { PDFViewer, Document, Page } from '@react-pdf/renderer';
 import axios from 'axios';
 
-const ViewPDF = () => {
-  const [pdf, setPdf] = useState(null);
+const ViewPDF = ({ selectedOption }) => {
+    const [pdfUrl, setPdfUrl] = useState('');
 
-  useEffect(() => {
-    axios.get('http://localhost:5215/generate', { responseType: 'arraybuffer' })
-      .then(res => {
-        setPdf(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, []);
+    useEffect(() => {
+        const fetchPDF = async () => {
+            try {
+                let response;
+                if (selectedOption === 'A4') {
+                    response = await axios.get('http://localhost:5215/generate24', {
+                        responseType: 'arraybuffer',
+                    });
+                } else if (selectedOption === 'A5') {
+                    response = await axios.get('http://localhost:5215/generate65', {
+                        responseType: 'arraybuffer',
+                    });
+                }
 
-  return (
-    <div className='h-screen w-full'>
+                // Convert the response data (PDF file) to a Blob
+                const blob = new Blob([response.data], { type: 'application/pdf' });
 
-      {pdf && (
-        <PDFViewer width="264px" height="139.8px" showToolbar={false}>
-          <Document
-            file={{
-              data: pdf,
-            }}
-          >
-            <Page pageNumber={1} size="A4" />
-          </Document>
-        </PDFViewer>
-      )}
-    </div>
-  );
+                // Create a URL for the Blob
+                const pdfUrl = URL.createObjectURL(blob) + '#zoom=140&toolbar=0'; // Append #toolbar=0 to hide toolbar
+
+                // Set the PDF URL state
+                setPdfUrl(pdfUrl);
+
+                // Log the PDF URL
+                console.log('PDF URL:', pdfUrl);
+            } catch (error) {
+                console.error('Error fetching PDF:', error);
+            }
+        };
+
+        fetchPDF(); // Fetch PDF when selected option changes
+    }, [selectedOption]); // Dependency array ensures this effect runs whenever the selected option changes
+
+    return (
+        <div>
+            {/* Display the PDF using an iframe */}
+            {pdfUrl && <iframe src={pdfUrl} width="100%" height="1000px" title="PDF Viewer" />}
+        </div>
+    );
 };
 
 export default ViewPDF;

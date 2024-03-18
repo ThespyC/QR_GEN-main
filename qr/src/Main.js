@@ -9,6 +9,10 @@ import Spreadsheet from './components/Spreadsheet';
 const Main = () => {
 
     const [paper, setPaper] = useState('paper3');
+    const [selectedOption, setSelectedOption] = useState('A4');
+    const handleOptionChange = (e) => {
+        setSelectedOption(e.target.value);
+    };
 
     const togglePaper = (event) => {
         setPaper(event.target.value);
@@ -18,14 +22,14 @@ const Main = () => {
     let content = null;
 
     if (paper === 'paper1') {
-        content = <div className='flex flex-row mr-5 w-full'>
-            <select className='border-2 border-black dark:border-white rounded-md p-1 w-full'>
-                <option value="A4">A4</option>
-                <option value="A5">A5</option>
-                <option value="A6">A6</option>
-                <option value="A7">A7</option>
-            </select>
-        </div>;
+        
+        content =  <div className='flex flex-row mr-5 w-full'>
+        <select className='border-2 border-black dark:border-white rounded-md p-1 w-full' onChange={handleOptionChange}>
+            <option value="A4">A4/24</option>
+            <option value="A5">A4/65</option>
+        </select>
+        
+    </div>
     }
     else if (paper === 'paper2') {
         content = <div className='container m-auto grid grid-cols-2 gap-3 text-xs font-medium'>
@@ -153,10 +157,7 @@ const Main = () => {
                   <input className='mr-2' type="radio" id="paper1" name="paper" value="paper1" onChange={togglePaper}/>
                   <label for="paper1">Label Sheet</label>
                   </div>
-                  <div className='flex flex-row mr-5'>
-                  <input  className='mr-2' type="radio" id="paper2" name="paper" value="paper2" onChange={togglePaper}/>
-                  <label for="paper2">Thermal Label</label>
-                  </div>  
+                   
                   <div className='flex flex-row mr-5'>
                   <input className='mr-2' type="radio" id="paper3" name="paper" value="paper3" onChange={togglePaper}/>
                   <label for="paper3">Custom</label>
@@ -208,7 +209,7 @@ const Main = () => {
                 </div>
     
                 <div className='leftt bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
-                   <ViewPDF />
+                <ViewPDF selectedOption={selectedOption} />
                 </div>
                 
             </div>

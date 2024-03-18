@@ -1,73 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { PDFViewer, Document, Page } from '@react-pdf/renderer';
+import axios from 'axios';
 
-const QrGrid = () => {
+const ViewPDF = () => {
+  const [pdf, setPdf] = useState(null);
+
+  useEffect(() => {
+    axios.get('http://localhost:5215/generate', { responseType: 'arraybuffer' })
+      .then(res => {
+        setPdf(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   return (
-    <div className='h-screen'>
-        
+    <div className='h-screen w-full'>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1'>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            <div className='bg-gray-200 p-2 rounded-md'>
-                <img src='../../s1.png' alt='qr code' />
-            </div>
-            
-            
-            </div>
+      {pdf && (
+        <PDFViewer width="900px" height="100%" showToolbar={false}>
+          <Document
+            file={{
+              data: pdf,
+            }}
+          >
+            <Page pageNumber={1} size="A4" />
+          </Document>
+        </PDFViewer>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default QrGrid
+export default ViewPDF;

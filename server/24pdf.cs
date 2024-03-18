@@ -60,7 +60,7 @@ FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode39-Regular.ttf")); //
         text.EmptyLine();
         var random = new Random();
         var barcode = random.Next(100000000, 999999999).ToString();
-        text.Span(barcode).FontFamily("Libre Barcode 39").FontSize(20);
+        text.Span(barcode).FontFamily("Libre Barcode 39").FontSize(22).LineHeight(1);
 
 
 
