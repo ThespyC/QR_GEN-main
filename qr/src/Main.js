@@ -7,18 +7,59 @@ import Spreadsheet from './components/Spreadsheet';
 
 
 const Main = () => {
-
+    const [formData,setFormData] = useState({});
     const [paper, setPaper] = useState('paper3');
     const [selectedOption, setSelectedOption] = useState('A4');
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]: e.target.value})
+
+        console.log(formData);
+    
+      }
     const handleOptionChange = (e) => {
+        if(e==null){
+            setSelectedOption("A5");
+        }else{
         setSelectedOption(e.target.value);
+    }
     };
 
     const togglePaper = (event) => {
+
         setPaper(event.target.value);
     };
+    const handlePrint = async () => {
+        const paperWidth = formData["paperWidth"]; // Example paper width
+        const paperHeight = formData["paperHeight"]; // Example paper height
+        if(paperHeight && paperWidth){
+        const settings = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            // Convert paperWidth and paperHeight to query parameters
+            body: JSON.stringify({ paperWidth, paperHeight })
+        };
+    
+        try {
+            const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}`, settings);
+            // Handle response as needed
+            console.log(fetchResponse);
+            handleOptionChange(null,"A5");
+        } catch (e) {
+            console.error(e);
+        }    
+    }else{
+        console.log("paper height and withd undefined")
+    }
+    }
+    
 
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(formData);
+      }
     let content = null;
 
     if (paper === 'paper1') {
@@ -56,7 +97,7 @@ const Main = () => {
         <div className='flex justify-between items-center'>
         <label for="paperWidth">Paper Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" onChange={handleChange} required/>
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -64,14 +105,14 @@ const Main = () => {
         <label for="paperHeight">Paper Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperHeight" onChange={handleChange} required />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
         <div className='flex justify-between items-center '>
         <label for="labelWidth">Label Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelWidth" onChange={handleChange} required/>
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -79,7 +120,7 @@ const Main = () => {
         <label for="labelHeight">Label Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelHeight" onChange={handleChange} required/>
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -87,7 +128,7 @@ const Main = () => {
         <label for="numberOfCols"># of columns</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbCols" onChange={handleChange} required />
         <span className='ml-2 opacity-0'>mm</span>
         </div>
         </div>
@@ -96,7 +137,7 @@ const Main = () => {
         <label for="numberOfRows"># of rows</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbRows" onChange={handleChange} required/>
         <span className='ml-2 opacity-0'>mm</span>
         </div>
         </div>
@@ -104,7 +145,7 @@ const Main = () => {
         <label for="pageTopMargin">Page Top Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageTopMargin" onChange={handleChange} required/>
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -114,7 +155,7 @@ const Main = () => {
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageBottomMargin" onChange={handleChange} required/>
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -122,7 +163,7 @@ const Main = () => {
         <label for="pageLeftMargin">Page Left Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageLeftMargin" onChange={handleChange} required />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -131,7 +172,7 @@ const Main = () => {
         <label for="pageRightMargin">Page Right Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperWidth" />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageRightMargin" onChange={handleChange} required/>
         <span className='ml-2 text-gray-400'>mm</span>
         
         </div>
@@ -203,12 +244,12 @@ const Main = () => {
                     <Spreadsheet />
                   </div>
                   <div className='w-full'>
-                    <button className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}}>Print</button>
+                    <button className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}} onClick={handlePrint}>Print</button>
                 </div>
                 </div>
                 </div>
     
-                <div className='leftt bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
+                <div className='left bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
                 <ViewPDF selectedOption={selectedOption} />
                 </div>
                 

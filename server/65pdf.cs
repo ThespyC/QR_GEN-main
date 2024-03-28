@@ -15,79 +15,66 @@ using System.Collections.Generic;
 //make array example with 65 items
 //make a loop to generate 65 items
 
+using QuestPDF.Drawing;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using System;
 
 namespace PDF1
 {
-
     public class Generate65PDF1
     {
-
-
+        private readonly int paperWidth;
+        private readonly int paperHeight;
 
         [Obsolete]
-        public Generate65PDF1()
+        public Generate65PDF1(int paperWidth, int paperHeight)
         {
+            this.paperWidth = paperWidth;
+            this.paperHeight = paperHeight;
 
             QuestPDF.Settings.License = LicenseType.Community;
-FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode39-Regular.ttf")); // use file name
+            FontManager.RegisterFont(File.OpenRead("./font/LibreBarcode39-Regular.ttf")); // use file name
 
-           Document.Create(container =>
-{
+            Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    // Change width and height of the page here
+                    page.Size(new PageSize(paperHeight,paperWidth)); // Width and height in points (1 inch = 72 points)
 
-    container.Page(page =>
+                    page.Content()
+                        .Border(1)
+                        .Grid(grid =>
+                        {
+                            grid.VerticalSpacing(1);
+                            grid.HorizontalSpacing(1);
+                            grid.AlignCenter();
+                            grid.Columns(11); // 12 by default
 
-    {
-         page.Size(PageSizes.A4);
-        
-       page.Content()
-            
-            .Border(1)
-            .Grid(grid =>
-{
+                            for (int i = 1; i <= 40; i++)
+                            {
+                                grid.Item(2).Background(Colors.White).Border(1).BorderColor(Colors.Black).Height(60).Padding(1).Text(text =>
+                                {
+                                    string title = "Title " + i;
+                                    text.Span(title).Bold().FontSize(8);
+                                    text.AlignCenter();
+                                    text.EmptyLine();
 
-    grid.VerticalSpacing(1);
-    grid.HorizontalSpacing(1);
-    grid.AlignCenter();
+                                    var random = new Random();
+                                    var barcode = random.Next(100000000, 999999999).ToString();
 
-    grid.Columns(11); // 12 by default
-     for( int i = 1;i <= 40 ;i++){
-     grid.Item(2).Background(Colors.White).Border(1).BorderColor(Colors.Black).Height(60).Padding(1).Text(text =>
-     {
-         String title = "Title " + i;
-         text.Span(title).Bold().FontSize(8);
+                                    text.Span(barcode).FontFamily("Libre Barcode 39").FontSize(22);
 
-
-         text.AlignCenter();
-         text.EmptyLine();
-         var random = new Random();
-         var barcode = random.Next(100000000, 999999999).ToString();
-        
-         text.Span(barcode).FontFamily("Libre Barcode 39").FontSize(22);
-
-
-
-
-         text.EmptyLine();
-         text.Span(barcode).FontSize(6);
-
-     });
-   
-    
-
-     }
-
-
-});
-
-
-
-    });
-})
-.GeneratePdf("65pdf.pdf");
-
-
+                                    text.EmptyLine();
+                                    text.Span(barcode).FontSize(6);
+                                });
+                            }
+                        });
+                });
+            })
+            .GeneratePdf("65pdf.pdf");
+        }
     }
-
-}
-
 }
