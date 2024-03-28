@@ -17,7 +17,7 @@ function Spreadsheet() {
 
   // submit state
   const [excelData, setExcelData] = useState(null);
-
+  console.log(excelData);
   useEffect(() => {
     // Load template file when component mounts
     fetchTemplate();

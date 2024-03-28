@@ -10,11 +10,12 @@ const Main = () => {
     const [formData,setFormData] = useState({});
     const [paper, setPaper] = useState('paper3');
     const [selectedOption, setSelectedOption] = useState('A4');
+    const [pdfArray,setPdfArray] = useState();
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})
 
         console.log(formData);
-    
+
       }
     const handleOptionChange = (e) => {
         if(e==null){
@@ -45,8 +46,11 @@ const Main = () => {
         try {
             const fetchResponse = await fetch(`http://localhost:5215/params?paperWidth=${paperWidth}&paperHeight=${paperHeight}`, settings);
             // Handle response as needed
-            console.log(fetchResponse);
-            handleOptionChange(null,"A5");
+           
+            let bufferArray = await fetchResponse.arrayBuffer();
+            console.log("setted");
+            setPdfArray(bufferArray);
+
         } catch (e) {
             console.error(e);
         }    
@@ -74,6 +78,7 @@ const Main = () => {
     }
     else if (paper === 'paper2') {
         content = <div className='container m-auto grid grid-cols-2 gap-3 text-xs font-medium'>
+            
  <div className='flex justify-between items-center'>
         <label for="paperWidth">Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1.5'>
@@ -92,12 +97,19 @@ const Main = () => {
         </div>;
     }
     else if (paper === 'paper3') {
-        content = <div className='container m-auto grid grid-cols-2 gap-3 text-xs font-medium'>
-            
+        content = 
+         <div className='container m-auto grid grid-cols-2 gap-3 text-xs font-medium'>
+           
         <div className='flex justify-between items-center'>
         <label for="paperWidth">Paper Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" onChange={handleChange}  min={0}
+ step={1}
+ onKeyDown={(e) => {
+ if (e.code === 'Minus') {
+    e.preventDefault();
+    }
+  }}  required/>
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -105,14 +117,20 @@ const Main = () => {
         <label for="paperHeight">Paper Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperHeight" onChange={handleChange} required />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperHeight"   onChange={handleChange}  min={0}
+ step={1}
+ onKeyDown={(e) => {
+ if (e.code === 'Minus') {
+    e.preventDefault();
+    }
+  }} required />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
         <div className='flex justify-between items-center '>
         <label for="labelWidth">Label Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelWidth" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelWidth" onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -120,7 +138,7 @@ const Main = () => {
         <label for="labelHeight">Label Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelHeight" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="labelHeight" onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -128,7 +146,7 @@ const Main = () => {
         <label for="numberOfCols"># of columns</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbCols" onChange={handleChange} required />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbCols" onChange={handleChange}  />
         <span className='ml-2 opacity-0'>mm</span>
         </div>
         </div>
@@ -137,7 +155,7 @@ const Main = () => {
         <label for="numberOfRows"># of rows</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbRows" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="nbRows" onChange={handleChange} />
         <span className='ml-2 opacity-0'>mm</span>
         </div>
         </div>
@@ -145,7 +163,7 @@ const Main = () => {
         <label for="pageTopMargin">Page Top Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageTopMargin" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageTopMargin" onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -155,7 +173,7 @@ const Main = () => {
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageBottomMargin" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageBottomMargin" onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -163,7 +181,7 @@ const Main = () => {
         <label for="pageLeftMargin">Page Left Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageLeftMargin" onChange={handleChange} required />
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageLeftMargin" onChange={handleChange}  />
         <span className='ml-2 text-gray-400'>mm</span>
         </div>
         </div>
@@ -172,12 +190,20 @@ const Main = () => {
         <label for="pageRightMargin">Page Right Margin</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageRightMargin" onChange={handleChange} required/>
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="pageRightMargin" onChange={handleChange} />
         <span className='ml-2 text-gray-400'>mm</span>
         
         </div>
+        
         </div>
-        </div>;
+        <div className='flex justify-between items-center '>
+            
+        <button className=' mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}} onClick={handlePrint}>Update</button>
+
+            
+            </div>
+        </div>
+
     }
     else {
         content = null;
@@ -200,7 +226,7 @@ const Main = () => {
                   </div>
                    
                   <div className='flex flex-row mr-5'>
-                  <input className='mr-2' type="radio" id="paper3" name="paper" value="paper3" onChange={togglePaper}/>
+                  <input className='mr-2' type="radio" id="paper3" name="paper" value="paper3"  onChange={togglePaper}/>
                   <label for="paper3">Custom</label>
                   </div>
                 </div>
@@ -246,11 +272,12 @@ const Main = () => {
                   <div className='w-full'>
                     <button className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}} onClick={handlePrint}>Print</button>
                 </div>
+                
                 </div>
                 </div>
     
                 <div className='left bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
-                <ViewPDF selectedOption={selectedOption} />
+                <ViewPDF selectedOption={selectedOption} bufferArray={pdfArray}/>
                 </div>
                 
             </div>
