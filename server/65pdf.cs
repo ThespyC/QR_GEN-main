@@ -19,6 +19,8 @@ using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using Newtonsoft.Json.Linq;
+
 using System;
 
 namespace PDF1
@@ -29,7 +31,7 @@ namespace PDF1
         private readonly int paperHeight;
 
         [Obsolete]
-        public Generate65PDF1(int paperWidth, int paperHeight)
+        public Generate65PDF1(int paperWidth, int paperHeight, JArray dataArray)
         {
             this.paperWidth = paperWidth;
             this.paperHeight = paperHeight;
@@ -52,12 +54,24 @@ namespace PDF1
                             grid.HorizontalSpacing(1);
                             grid.AlignCenter();
                             grid.Columns(11); // 12 by default
+                           
+                             // Assuming grid is an object representing your grid control
 
-                            for (int i = 1; i <= 40; i++)
+                            // Process each item in the dataArray
+                            for (int i = 0; i < dataArray.Count; i++)
                             {
-                                grid.Item(2).Background(Colors.White).Border(1).BorderColor(Colors.Black).Height(60).Padding(1).Text(text =>
+                                // Access each item in the array
+                                var item = dataArray[i];
+
+                                // Extract properties from the item
+                                string title = item["Title"].ToString();
+                                string description = item["Description"].ToString();
+                                string code = item["Code"].ToString();
+
+                                // Create a new grid item with the specified properties
+                                 grid.Item(2).Background(Colors.White).Border(1).BorderColor(Colors.Black).Height(60).Padding(1).Text(text =>
                                 {
-                                    string title = "Title " + i;
+                                    
                                     text.Span(title).Bold().FontSize(8);
                                     text.AlignCenter();
                                     text.EmptyLine();
@@ -65,12 +79,13 @@ namespace PDF1
                                     var random = new Random();
                                     var barcode = random.Next(100000000, 999999999).ToString();
 
-                                    text.Span(barcode).FontFamily("Libre Barcode 39").FontSize(22);
+                                    text.Span(code).FontFamily("Libre Barcode 39").FontSize(22);
 
                                     text.EmptyLine();
-                                    text.Span(barcode).FontSize(6);
+                                    text.Span(code).FontSize(6);
                                 });
-                            }
+}
+
                         });
                 });
             })

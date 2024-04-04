@@ -33,7 +33,38 @@ function Spreadsheet() {
       console.error('Error fetching template:', error);
     }
   };
+  
+const sendDataToServer = async () => {
+  try {
+      // Prepare your JSON data
+      const jsonData = {
+          dataArray: excelData
+          
+      };
 
+      // Send POST request to the server
+      const response = await fetch('http://localhost:5215/excelData', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(jsonData)
+      });
+
+      // Check if the request was successful
+      if (response.ok) {
+          // Handle successful response
+          console.log('Data sent successfully');
+          console.log(response.ok)
+      } else {
+          // Handle error response
+          console.error('Failed to send data:', response.statusText);
+      }
+  } catch (error) {
+      // Handle network errors
+      console.error('Error:', error.message);
+  }
+};
   const handleTemplateData = async () => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -43,6 +74,8 @@ function Spreadsheet() {
       const data = XLSX.utils.sheet_to_json(worksheet);
       // setExcelData(data.slice(0, 10));
       setExcelData(data);
+
+
     };
     reader.readAsBinaryString(excelFile);
   }
@@ -50,6 +83,7 @@ function Spreadsheet() {
   useEffect(() => {
     if (excelFile) {
       handleTemplateData();
+      
     }
   }, [excelFile]);
 
@@ -61,6 +95,8 @@ function Spreadsheet() {
       if (selectedFile && fileTypes.includes(selectedFile.type)) {
         setTypeError(null);
         setExcelFile(selectedFile);
+        //post to api as json 
+
       }
       else {
         setTypeError('Please select only Excel file types');
@@ -83,6 +119,7 @@ function Spreadsheet() {
         const worksheet = workbook.Sheets[worksheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
         setExcelData(data);
+     
       };
       reader.readAsBinaryString(excelFile);
     }
@@ -132,6 +169,9 @@ function Spreadsheet() {
           <div className="alert alert-danger" role="alert">{typeError}</div>
         )}
       </form>
+      <button onClick={sendDataToServer}>
+            Send Data
+        </button>
     </div>
   );
 }

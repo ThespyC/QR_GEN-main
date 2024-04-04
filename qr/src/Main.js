@@ -7,15 +7,15 @@ import Spreadsheet from './components/Spreadsheet';
 
 
 const Main = () => {
-    const [formData,setFormData] = useState({});
-    const [paper, setPaper] = useState('paper3');
+    const [formData,setFormData] = useState({ paperWidth: 700 , paperHeight:1000});
+    const [paper, setPaper] = useState('paper1');
     const [selectedOption, setSelectedOption] = useState('A4');
     const [pdfArray,setPdfArray] = useState();
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})
 
         console.log(formData);
-
+   
       }
     const handleOptionChange = (e) => {
         if(e==null){
@@ -59,6 +59,17 @@ const Main = () => {
     }
     }
     
+    const printIframe = (id) => {
+        const iframe = document.frames
+          ? document.frames[id]
+          : document.getElementById(id);
+        const iframeWindow = iframe.contentWindow || iframe;
+    
+        iframe.focus();
+        iframeWindow.print();
+    
+        return false;
+      };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -70,8 +81,8 @@ const Main = () => {
         
         content =  <div className='flex flex-row mr-5 w-full'>
         <select className='border-2 border-black dark:border-white rounded-md p-1 w-full' onChange={handleOptionChange}>
-            <option value="A4">A4/24</option>
-            <option value="A5">A4/65</option>
+            <option value="A4" >A4/24</option>
+            <option value="A5" selected>A4/65</option>
         </select>
         
     </div>
@@ -103,7 +114,7 @@ const Main = () => {
         <div className='flex justify-between items-center'>
         <label for="paperWidth">Paper Width</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" onChange={handleChange}  min={0}
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 ' type="number" id="paperWidth" name="paperWidth" value={formData.paperWidth} onChange={handleChange}  min={0}
  step={1}
  onKeyDown={(e) => {
  if (e.code === 'Minus') {
@@ -117,7 +128,7 @@ const Main = () => {
         <label for="paperHeight">Paper Height</label>
         <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1'>
 
-        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperHeight"   onChange={handleChange}  min={0}
+        <input className='  text-gray-900 text-sm rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number" id="paperWidth" name="paperHeight" value={formData.paperHeight}  onChange={handleChange}  min={0}
  step={1}
  onKeyDown={(e) => {
  if (e.code === 'Minus') {
@@ -221,12 +232,13 @@ const Main = () => {
                 <h1 className='text-lg font-bold text-black dark:text-white mt-10 ml-5 mb-5'>1. Types of Paper</h1>
                 <div className='w-[90%] ml-5 flex justify-between'>
                   <div className='flex flex-row mr-5'>
-                  <input className='mr-2' type="radio" id="paper1" name="paper" value="paper1" onChange={togglePaper}/>
+                  <input className='mr-2' type="radio" id="paper1" name="paper" value="paper1" checked={paper === "paper1"} // Check if paper1 is selected
+ onChange={togglePaper}/>
                   <label for="paper1">Label Sheet</label>
                   </div>
                    
                   <div className='flex flex-row mr-5'>
-                  <input className='mr-2' type="radio" id="paper3" name="paper" value="paper3"  onChange={togglePaper}/>
+                  <input className='mr-2' type="radio" id="paper3" name="paper" value="paper3" checked={paper === "paper3"}  onChange={togglePaper}/>
                   <label for="paper3">Custom</label>
                   </div>
                 </div>
@@ -242,42 +254,74 @@ const Main = () => {
                 <form className='mx-10 mt-5'>
    <section className="snap-x snap-mandatory pretty-scrollbar pb-[10px] flex gap-[10px] overflow-x-auto overscroll-contain" role="radiogroup">
       <h3 className="hidden">List of Label Design</h3>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 active:border-main-4" role="radio" aria-label="Design : barcodeSimple"><img src="../s1.png"  alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-primary"  role="radio" aria-label="Design : barcodeWithTitle"><img alt="preview" width="264.566929137" height="132.2834645685" decoding="async" data-nimg="1" className="h-full w-full object-cover" src="../s1.png" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4"  role="radio" aria-label="Design : qrSimple"><img alt="preview" width="188.976377955" height="188.976377955" decoding="async" data-nimg="1" className="h-full w-full object-cover" src="../s2.png" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4"  role="radio" aria-label="Design : qrWithTitle"><img alt="preview" width="188.976377955" height="188.976377955" decoding="async" data-nimg="1" className="h-full w-full object-cover" src="../s2.png" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4"  role="radio" aria-label="Design : qrHorizontal"><img alt="preview" width="226.77165354599998" height="132.2834645685" decoding="async" data-nimg="1" className="h-full w-full object-cover" src="../s3.png" /></div>
-      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4" role="radio" aria-label="Design : textOnly"><img alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover" src="../s4.png"/></div>
+      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 active:border-main-4 z-0" role="radio" aria-label="Design : barcodeSimple"><img src="../s1.png"  alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" /></div>
+      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-primary z-0"  role="radio" aria-label="Design : barcodeWithTitle"><img alt="preview" width="264.566929137" height="132.2834645685" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s1.png" /></div>
+      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0"  role="radio" aria-label="Design : qrSimple"><img alt="preview" width="188.976377955" height="188.976377955" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s2.png" /></div>
+      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0"  role="radio" aria-label="Design : qrWithTitle"><img alt="preview" width="188.976377955" height="188.976377955" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s2.png" /></div>
+      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0"  role="radio" aria-label="Design : qrHorizontal"><img alt="preview" width="226.77165354599998" height="132.2834645685" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s3.png" /></div>
+      <div className="relative snap-start snap-always h-[120px] flex-none cursor-pointer overflow-hidden rounded-[8px] border-2 border-solid border-gray-4 z-0" role="radio" aria-label="Design : textOnly"><img alt="preview" width="226.77165354599998" height="113.38582677299999" decoding="async" data-nimg="1" className="h-full w-full object-cover z-0" src="../s4.png"/></div>
    </section>
    
 </form> 
-                <div className='w-[90%] ml-5 flex justify-between flex-col pt-10'>
-                <h1 className='font-bold'>Titre</h1>
-                <input className='border-2 border-black dark:border-white rounded-md p-1'/>
-                <hr className='my-5'/>
-                <h1 className='font-bold'>Description</h1>
+                <div className='w-[90%] ml-5 flex justify-evenly flex-col pt-10'>
+                <div className='flex flex-col'>
+                <h1 className='font-bold'>Title</h1>
+                    <div className='flex justify-evenly'>
+                        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1 w-24'>
+                        <input className='  text-gray-900 text-xs rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number"  />
+                        <span className='ml-2 text-gray-400'>pt</span>
+                        
+                        </div>
+                        <div className='flex items-center' >
+                        <button className=' border border-gray-300 rounded-lg p-2 rounded-r-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.792 10.876c0-.774-.281-1.352-.846-1.733-.563-.382-1.438-.572-2.623-.572H5.938v4.683h.86c.859 0 1.567-.051 2.121-.153.555-.103 1.005-.327 1.352-.67.348-.343.521-.862.521-1.555m-.687-6.15c0-.657-.24-1.151-.717-1.482-.479-.332-1.154-.498-2.027-.498H5.938v4.088h1.443c1.815 0 2.724-.702 2.724-2.108m2.15-.112c0 .657-.151 1.236-.449 1.737-.3.502-.737.886-1.31 1.152.81.279 1.429.713 1.858 1.306.431.59.646 1.293.646 2.104 0 1.332-.502 2.345-1.505 3.043C10.491 14.652 8.989 15 6.988 15H2v-1.747h1.777V2.746H2V1h5.065c1.752 0 3.055.298 3.909.891.854.595 1.281 1.502 1.281 2.723"></path></svg></button>
+                        <button  className=' border border-gray-300 rounded-lg p-2 rounded-l-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.157 10.81c0-.68-.202-1.17-.606-1.468-.406-.297-1.102-.446-2.089-.446h-.947v3.726h1.472c.663 0 1.191-.146 1.582-.437.392-.29.588-.75.588-1.375m-.449-5.955c0-.545-.202-.927-.607-1.147-.405-.22-.973-.33-1.707-.33h-.879v3.16h1.157c.681 0 1.191-.128 1.529-.382.338-.254.507-.688.507-1.3m3.737-.187c0 1.357-.679 2.32-2.036 2.89.873.315 1.523.751 1.95 1.305.427.554.641 1.237.641 2.05C14 13.637 11.897 15 7.691 15H1v-2.378h1.778V3.378H1V1h6.691c1.944 0 3.389.304 4.335.911.946.607 1.419 1.526 1.419 2.758"></path></svg></button>
+                        </div>
+                        <div className='flex items-center' >
+                        <button className=' border border-gray-300 rounded-lg p-2 rounded-r-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-8 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m4 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button className=' border border-gray-300  p-2  hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-4 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m2 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button  className=' border border-gray-300 rounded-lg p-2 rounded-l-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m0 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m0 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        </div>
+                    </div>
 
-                <input className='border-2 border-black dark:border-white rounded-md p-1'/>
+
+                </div>
                 <hr className='my-5'/>
-                <h1 className='font-bold'>Barcode</h1>
-                <input className='border-2 border-black dark:border-white rounded-md p-1'/>
-                <hr className='my-5'/>
+
+                <div className='flex flex-col'>
                 <h1 className='font-bold'>Barcode Text</h1>
-                <input className='border-2 border-black dark:border-white rounded-md p-1'/>
+                    <div className='flex justify-evenly items-start'>
+                        <div className='flex flex-row justify-center items-center border border-gray-300 rounded-lg p-1 w-24'>
+                        <input className='  text-gray-900 text-xs rounded-lg outline-none block w-[50px] py-1 px-1.5 dark:bg-gray-700 '  type="number"  />
+                        <span className='ml-2 text-gray-400'>pt</span>
+    
+                        </div>
+                        <div className='flex items-center' >
+                        <button className=' border border-gray-300 rounded-lg p-2 rounded-r-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.792 10.876c0-.774-.281-1.352-.846-1.733-.563-.382-1.438-.572-2.623-.572H5.938v4.683h.86c.859 0 1.567-.051 2.121-.153.555-.103 1.005-.327 1.352-.67.348-.343.521-.862.521-1.555m-.687-6.15c0-.657-.24-1.151-.717-1.482-.479-.332-1.154-.498-2.027-.498H5.938v4.088h1.443c1.815 0 2.724-.702 2.724-2.108m2.15-.112c0 .657-.151 1.236-.449 1.737-.3.502-.737.886-1.31 1.152.81.279 1.429.713 1.858 1.306.431.59.646 1.293.646 2.104 0 1.332-.502 2.345-1.505 3.043C10.491 14.652 8.989 15 6.988 15H2v-1.747h1.777V2.746H2V1h5.065c1.752 0 3.055.298 3.909.891.854.595 1.281 1.502 1.281 2.723"></path></svg></button>
+                        <button  className=' border border-gray-300 rounded-lg p-2 rounded-l-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M10.157 10.81c0-.68-.202-1.17-.606-1.468-.406-.297-1.102-.446-2.089-.446h-.947v3.726h1.472c.663 0 1.191-.146 1.582-.437.392-.29.588-.75.588-1.375m-.449-5.955c0-.545-.202-.927-.607-1.147-.405-.22-.973-.33-1.707-.33h-.879v3.16h1.157c.681 0 1.191-.128 1.529-.382.338-.254.507-.688.507-1.3m3.737-.187c0 1.357-.679 2.32-2.036 2.89.873.315 1.523.751 1.95 1.305.427.554.641 1.237.641 2.05C14 13.637 11.897 15 7.691 15H1v-2.378h1.778V3.378H1V1h6.691c1.944 0 3.389.304 4.335.911.946.607 1.419 1.526 1.419 2.758"></path></svg></button>
+                        </div>
+                        <div className='flex items-center' >
+                        <button className=' border border-gray-300 rounded-lg p-2 rounded-r-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-8 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m4 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button className=' border border-gray-300  p-2  hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m-4 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m2 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        <button  className=' border border-gray-300 rounded-lg p-2 rounded-l-none hover:bg-gray-100'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path d="M14.25 4.5H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5m0 4.25h-4.5a.75.75 0 0 1 0-1.5h4.5a.75.75 0 0 1 0 1.5m0 4.25h-8.5a.75.75 0 0 1 0-1.5h8.5a.75.75 0 0 1 0 1.5"></path></svg></button>
+                        </div>
+                    </div>
+
+
+                </div>
                 <hr className='my-5'/>
                   </div>
                   <div className='w-[90%] ml-5 flex justify-between flex-col pt-10'>
                     <Spreadsheet />
                   </div>
                   <div className='w-full'>
-                    <button className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}} onClick={handlePrint}>Print</button>
+                    <button className='ml-40 mb-10 mt-17 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded w-32' onClick={()=> printIframe('pdf')} style={{ backgroundColor: '#4F67FF' , transition: 'background-color 0.3s'}}>Print</button>
                 </div>
                 
                 </div>
                 </div>
     
                 <div className='left bg-[#525659] w-full h-[80%] md:h-full md:w-[70%] w-full'>
-                <ViewPDF selectedOption={selectedOption} bufferArray={pdfArray}/>
+                <ViewPDF selectedOption={selectedOption} bufferArray={pdfArray} />
                 </div>
                 
             </div>

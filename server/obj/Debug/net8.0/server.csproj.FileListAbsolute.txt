@@ -89,3 +89,11 @@ C:\react\QR_GEN-main\server\obj\Debug\net8.0\server.pdb
 C:\react\QR_GEN-main\server\obj\Debug\net8.0\server.genruntimeconfig.cache
 C:\react\QR_GEN-main\server\obj\Debug\net8.0\ref\server.dll
 C:\react\QR_GEN-main\server\obj\Debug\net8.0\server.sourcelink.json
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\ClosedXML.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\ExcelNumberFormat.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\Irony.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\SixLabors.Fonts.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\System.IO.Packaging.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\XLParser.dll
+C:\react\QR_GEN-main\server\bin\Debug\net8.0\Newtonsoft.Json.dll

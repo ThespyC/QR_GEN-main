@@ -1,5 +1,6 @@
 using PDF2;
 using PDF1;
+using Newtonsoft.Json.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
@@ -10,7 +11,7 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader()
                .AllowAnyMethod();
     });
-});
+}); 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,6 +30,28 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowReactApp"); // Enable CORS with the policy for your React app
 
+
+JArray dataArray = null;
+app.MapPost("/excelData", async (HttpRequest request) =>
+{
+    using (StreamReader reader = new StreamReader(request.Body))
+    {
+        string jsonString = await reader.ReadToEndAsync();
+        JObject jsonData = JObject.Parse(jsonString);
+
+        // Handle JSON data here
+        // Example: Extract data from JSON object
+       dataArray = (JArray)jsonData["dataArray"];
+        Console.WriteLine(dataArray);
+        var pdf = new Generate65PDF1(800, 1000,dataArray);
+    }
+
+    // Return your response, if needed
+    return Results.Ok("Excel data received successfully");
+})
+.WithName("ExcelData")
+.WithOpenApi();
+
 app.MapPost("/params", (string paperWidth, string paperHeight) =>
 {
     Console.WriteLine("{0} {1}", paperHeight, paperWidth);
@@ -38,7 +61,7 @@ app.MapPost("/params", (string paperWidth, string paperHeight) =>
     int height = Convert.ToInt32(paperHeight);
     
     // Generate PDF with the specified width and height
-    var pdf = new Generate65PDF1(width, height);
+    var pdf = new Generate65PDF1(width, height,dataArray);
     
     var filePath = "65pdf.pdf"; // Path to the generated PDF file
     byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);

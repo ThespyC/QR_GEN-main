@@ -13,7 +13,7 @@ const Navbar = () => {
    
 
   return (
-    <div className={`navbar w-full h-20 bg-white dark:bg-slate-950 fixed top-0 left-0 bg-white shadow-lg `}>
+    <div className={`navbar w-full h-20 bg-white dark:bg-slate-950 fixed top-0 left-0 bg-white shadow-lg z-10 `}>
         <div className='container flex justify-evenly h-full md:mx-[20%] md:w-[60%] mx-5 '>
             <div className='flex items-center w-full justify-evenly'>
             <a to='/' className='text-2xl font-bold cursor-pointer '> <span className=' text-main dark:font-medium'>BOX</span><span className='text-main font-medium dark:font-bold'>UP</span> </a>
